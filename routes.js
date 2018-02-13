@@ -1,4 +1,8 @@
 // app/routes.js
+
+const jwt = require('jsonwebtoken');
+
+
 module.exports = function(app, passport) {
 
     // =====================================
@@ -19,11 +23,34 @@ module.exports = function(app, passport) {
     });
 
     // process the login form
-    app.post('/login', passport.authenticate('local-login', {
+   /* app.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/profile', // redirect to the secure profile section
+        failureRedirect : '/login', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+    }));*/
+
+    app.post('/login', passport.authenticate('local-login', {session: false}, {
         successRedirect : '/profile', // redirect to the secure profile section
         failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
+
+    /* app.post('/login', function(req, res, next){
+        console.log("here");
+        passport.authenticate('local-login', {session : false}, function(err, user, info){
+            if(err || !user){
+                console.log(err);
+                return res.status(400).json({
+                    messages : 'Something is not right',
+                    user : user
+                })
+            }
+
+            const token = jwt.sign(user, 'your_jwt_secret');
+            console.log(token);
+            return res.json({user, token});
+        })
+     })*/
 
 
     // =====================================
